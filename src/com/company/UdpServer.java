@@ -2,6 +2,7 @@ package com.company;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class UdpServer {
@@ -25,21 +26,33 @@ public class UdpServer {
                     DatagramPacket packet = new DatagramPacket(new byte[256], 256);
                     while(true){
                         socket.receive(packet);
+                        System.out.println(packet.getAddress());
+                        InetAddress ar = packet.getAddress();
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                if(box.write(packet.getAddress(),socket.getLocalPort())){
-                                    System.out.println(true);
+                                System.out.println(socket.getLocalPort());
+                                System.out.println(ar);
+                                if(box.write(ar,socket.getLocalPort())){
+                                    System.out.println("TCP starts");
+                                    TcpSocket tsocket = new TcpSocket();
+                                    int r = tsocket.initialize();
+                                    try{
+                                        System.out.println(r);
+                                    socket.send(new DatagramPacket(String.valueOf(r).getBytes(),256,packet.getSocketAddress()));
+                                    tsocket.listen();
+                                    }
+                                    catch (Exception ex){
+                                        System.err.println(ex.getMessage());
+                                    }
                                 }
                             }
                         }).start();
                     }
 
-
-
-
-
-                }catch (Exception ex){}
+                }catch (Exception ex){
+                    System.out.println(ex.getMessage());
+                }
              }
          }).start();
         }
