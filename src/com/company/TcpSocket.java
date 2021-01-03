@@ -1,6 +1,7 @@
 package com.company;
 
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Random;
 
 public class TcpSocket {
@@ -12,5 +13,14 @@ public class TcpSocket {
         {return initialize();}
         return this.socket.getLocalPort();
 
+    }
+    void listen()
+    {
+        try (Socket socket1 = socket.accept()) {
+            System.out.println("connected");
+         socket1.getOutputStream().write("Zig Heil \0".getBytes());
+        }catch (Exception ex){
+            System.err.println(ex.getMessage());
+        }
     }
 }
