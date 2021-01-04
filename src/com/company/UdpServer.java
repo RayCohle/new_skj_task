@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class UdpServer {
     ArrayList<Integer> combination = new ArrayList<Integer>();
@@ -11,7 +12,8 @@ public class UdpServer {
     UdpServer(ArrayList<Integer> combination)
     {
         box = new Box(combination);
-        this.combination = combination;
+        this.combination = combination.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
+
     }
     void start()
     {
@@ -51,7 +53,7 @@ public class UdpServer {
                     }
 
                 }catch (Exception ex){
-                    System.out.println(ex.getMessage());
+                    System.exit(0);
                 }
              }
          }).start();
