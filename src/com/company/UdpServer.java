@@ -3,8 +3,11 @@ package com.company;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UdpServer {
     ArrayList<Integer> combination = new ArrayList<Integer>();
@@ -13,7 +16,6 @@ public class UdpServer {
     {
         box = new Box(combination);
         this.combination = combination.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
-
     }
     void start()
     {
@@ -28,24 +30,23 @@ public class UdpServer {
                     DatagramPacket packet = new DatagramPacket(new byte[256], 256);
                     while(true){
                         socket.receive(packet);
-                        System.out.println(packet.getAddress());
-                        InetAddress ar = packet.getAddress();
+
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                System.out.println(socket.getLocalPort());
-                                System.out.println(ar);
+                                InetAddress ar = packet.getAddress();
                                 if(box.write(ar,socket.getLocalPort())){
                                     System.out.println("TCP starts");
-                                    TcpSocket tsocket = new TcpSocket();
-                                    int r = tsocket.initialize();
+                                    TcpSocket tcpsocket = new TcpSocket();
+                                    int port_number = tcpsocket.initialize();
                                     try{
-                                        System.out.println(r);
-                                    socket.send(new DatagramPacket(String.valueOf(r).getBytes(),256,packet.getSocketAddress()));
-                                    tsocket.listen();
+                                        DatagramPacket portPacket = new DatagramPacket(String.valueOf(port_number).getBytes(),
+                                                String.valueOf(port_number).getBytes().length,ar,combination.get(finalA));
+                                        socket.send(portPacket);
+                                    tcpsocket.listen();
                                     }
                                     catch (Exception ex){
-                                        System.err.println(ex.getMessage());
+                                        System.err.println(1+ " "  + ex.getMessage());
                                     }
                                 }
                             }
@@ -58,5 +59,7 @@ public class UdpServer {
              }
          }).start();
         }
+
     }
+
 }

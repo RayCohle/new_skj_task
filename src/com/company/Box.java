@@ -16,7 +16,6 @@ public class Box {
         if(map.containsKey(address))
         {
             map.get(address).add(port);
-
             if(map.get(address).size()==origin.size())
             {
                 for(int a = 0; a<origin.size(); a++)
@@ -29,21 +28,15 @@ public class Box {
                 }
                 map.put(address,new ArrayList<Integer>());
                 return true;
-
             }
             else{
-
-
                 return false;
             }
         }
         else{
-
             map.put(address,new ArrayList<Integer>());
             map.get(address).add(port);
         return false;
-
         }
-
     }
 }
